@@ -90,7 +90,7 @@ def fetch_ohlcv_history(exchange, symbol, timeframe, since, zoom):
     limit = 1000
     timeframe_seconds = exchange.parse_timeframe(timeframe)
     timeframe_ms = timeframe_seconds * 1000
-    next_since = since
+    next_since = 0 if since is None else since
     max_batches = 30
 
     for _ in range(max_batches):
