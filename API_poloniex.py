@@ -24,12 +24,9 @@ def createTimeStamp(datestr, format="%Y-%m-%d %H:%M:%S"):
     return time.mktime(time.strptime(datestr, format))
 
 class poloniex:
-    def __init__(self, APIKey, Secret, time_out=180):
+    def __init__(self, APIKey='', Secret='', time_out=180):
         self.APIKey = APIKey
         self.Secret = Secret
-        self.socket_timeout = time_out
-   
-    def __init__(self, time_out=180):
         self.socket_timeout = time_out
 
     def post_process(self, before):
@@ -45,7 +42,7 @@ class poloniex:
                             
         return after
 
-    def api_query(self, command, req={}):
+    def api_query(self, command, req=None):
         """
         Takes as input the Poloniex REST API command and any extra arguments in a dictionary and returns
         the results as json data
@@ -53,6 +50,9 @@ class poloniex:
         :param req: Extra command arguments as a dictionary
         :return: json data
         """
+        if req is None:
+            req = {}
+
         try:
             if(command == "returnTicker" or command == "return24hVolume"):
                 ret = urllib.request.urlopen(urllib.request.Request('https://poloniex.com/public?command=' + command), timeout = self.socket_timeout)
@@ -106,7 +106,7 @@ class poloniex:
                 req['nonce'] = int(time.time()*1000)
                 post_data = urllib.parse.urlencode(req)
 
-                sign = hmac.new(self.Secret, post_data, hashlib.sha512).hexdigest()
+                sign = hmac.new(self.Secret.encode('utf-8'), post_data.encode('utf-8'), hashlib.sha512).hexdigest()
                 headers = {
                     'Sign': sign,
                     'Key': self.APIKey

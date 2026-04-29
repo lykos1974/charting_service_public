@@ -1277,7 +1277,7 @@ def pnf_signal_detection_engine(result, filename, boxsize=0.029558802, reversal=
 
                 #Initialize these two flags because we are in the opposite movement
                 run_once_flagY = 0
-                db_breakout_once == False
+                db_breakout_once = False
 
                 # find maximum box number of previous column and check for a breakout - many ways to do this
                 # we use the LastNext of the previous row - we also save the value referral till reversal
@@ -1307,7 +1307,7 @@ def pnf_signal_detection_engine(result, filename, boxsize=0.029558802, reversal=
 
                 #Initialize these two flags because we are in the opposite movement
                 run_once_flagX = 0
-                dt_breakout_once == False
+                dt_breakout_once = False
 
                 # find minimum box number of previous column and check for a breakout - many ways to do this
                 # we use the LastNextO of the previous row - we also save the value for referral till reversal
