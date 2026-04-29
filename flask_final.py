@@ -431,20 +431,12 @@ def draw_chart():
 
     totalHistoricalDataFetched = len(results)
 
-    f.file_save_json_contents(json_filename_to_fetch,results);
-
-    # Feed the .json into appropriate PnF engine, with the submitted form parameters, in order to create the svg
-    # We will use 2 services from the engine - the main PnF Close/High_Low engine
+    # Feed data into appropriate PnF engine
     pnfengine.set_pandas_and_numpy_options("cryptocoins")
 
     try:
-        #MyPandasFrame = pd.read_json(path_or_buf = 'poloniex_output'+f.PATH_SEPARATOR+currency_pair+".json",
-        #                             orient = 'DataFrame',
-        #                             precise_float = True)
-        MyPandasFrame = pd.read_json(path_or_buf = json_filename_to_fetch,
-                                     orient = 'DataFrame',
-                                     precise_float=True)
-        f.file_delete(json_filename_to_fetch)
+        # Build DataFrame directly from fetched rows to avoid pandas JSON orient parsing differences.
+        MyPandasFrame = pd.DataFrame(results, columns=['date', 'high', 'low', 'close'])
     except:
         return redirect(url_for('main_page'))
 
