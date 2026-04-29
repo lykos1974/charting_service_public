@@ -431,6 +431,16 @@ def draw_chart():
 
     totalHistoricalDataFetched = len(results)
 
+    if totalHistoricalDataFetched == 0:
+        chart_svg = "<img src=""static/forever.jpg"" style=""float:left;margin-top:50px;padding-right:50px;"">" \
+                    "<br><br><h4><small>No historical candles returned from exchange for the selected pair/timeframe/zoom." \
+                    "<br><br>Please try another <mark>pair</mark>, <mark>timeframe</mark>, or smaller <mark>zoom</mark>.</small></h4>"
+        chart_text = selectedExchange+": "+str(currency_pair)+" "+time_period_string+" PnF Chart: no historical data returned"
+        js_script = "$(\'select[name=\"Currency_Pair\"] option[value=\""+currency_pair+"\"]\').attr(\"selected\",true);"
+        return render_template("container_template_updated.html", scale_svg="", chart_svg=chart_svg,
+                               chart_text=chart_text, js_script=js_script, exchanges=ccxt.exchanges,
+                               default=selectedExchange, defaultParams=selectedParams)
+
     # Feed data into appropriate PnF engine
     pnfengine.set_pandas_and_numpy_options("cryptocoins")
 
