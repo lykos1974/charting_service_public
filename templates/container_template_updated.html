@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link type= "text/css" rel="stylesheet" href= "{{ url_for('static',filename='style.css') }}">
+        <link type= "text/css" rel="stylesheet" href= "{{ url_for('static',filename='select2.min.css') }}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="{{ url_for('static',filename='main.js') }}"></script>
+        <script src="{{ url_for('static',filename='select2.min.js') }}"></script>
+
+    </head>
+<body onload="init('{{default}}','{{defaultParams.pair}}','{{defaultParams.period}}')">
+
+    <div id="top">
+        
+        <div id="top1">
+
+            <form action="{{ url_for('draw_chart') }}" method="POST" class="form-inline">
+
+                <table>
+
+                <tr>
+                <td class="col-xs-10" style="width:inherit;vertical-align: middle;" rowspan="3">
+                    <a href="{{ url_for('home') }}">
+                        <img id="logo" style="margin-right:20px" width="144" height="73" title="" alt="" src="{{ url_for('static',filename='cryptxo_logo.jpg') }}"  />
+                    </a>
+                </td>
+                <td>
+                    <h4><small>Exchange</small></h4>
+
+                    <select id="Exchange" name="Exchange" class="form-control" onchange="init(value,'','')">
+                        <option value="">Select Exchange</option>
+                        {% for exchange in exchanges %}
+                        <option value="{{exchange}}" {% if exchange == default %} selected="selected" {% endif %} >{{ exchange[0]|upper}}{{exchange[1:] }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                <td >
+                    <h4><small>Currency Pair</small></h4>
+
+
+                    <select name="Currency_Pair" id="Currency_Pair" class="form-control" style="width:150px"  >
+
+
+                    </select>
+
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Time Period</small></h4>
+        
+                    <select name="Time_Period" id ="Time_Period" class="form-control" >
+
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Boxsize</small></h4>
+        
+                    <select name="Boxsize" class="form-control">
+                    <option value="1p" {% if defaultParams.boxsize =='1p' %} selected="selected" {% endif %} >1% (Log Scale)</option>
+                    <option value="2p" {% if defaultParams.boxsize =='2p' %} selected="selected" {% endif %} >2% (Log Scale)</option>
+                    <option value="3p" {% if defaultParams.boxsize =='3p' %} selected="selected" {% endif %} >3% (Log Scale)</option>
+                    <option value="1" {% if defaultParams.boxsize =='1' %} selected="selected" {% endif %} >1 Satoshi</option>
+                    <option value="2" {% if defaultParams.boxsize =='2' %} selected="selected" {% endif %} >2 Satoshi</option>
+                    <option value="5" {% if defaultParams.boxsize =='5' %} selected="selected" {% endif %} >5 Satoshi</option>
+                    <option value="10" {% if defaultParams.boxsize =='10' %} selected="selected" {% endif %} >10 Satoshi</option>
+                    <option value="20" {% if defaultParams.boxsize =='20' %} selected="selected" {% endif %} >20 Satoshi</option>
+                    <option value="25" {% if defaultParams.boxsize =='25' %} selected="selected" {% endif %} >25 Satoshi</option>
+                    <option value="100" {% if defaultParams.boxsize =='100' %} selected="selected" {% endif %} >100 Satoshi</option>
+                    <option value="150" {% if defaultParams.boxsize =='150' %} selected="selected" {% endif %} >150 Satoshi</option>
+                    <option value="200" {% if defaultParams.boxsize =='200' %} selected="selected" {% endif %} >200 Satoshi</option>
+                    <option value="250" {% if defaultParams.boxsize =='250' %} selected="selected" {% endif %} >250 Satoshi</option>
+                    <option value="500" {% if defaultParams.boxsize =='500' %} selected="selected" {% endif %} >500 Satoshi</option>
+                    <option value="1000" {% if defaultParams.boxsize =='1000' %} selected="selected" {% endif %} >1000 Satoshi</option>
+                    <option value="2000" {% if defaultParams.boxsize =='2000' %} selected="selected" {% endif %} >2000 Satoshi</option>
+                    <option value="5000" {% if defaultParams.boxsize =='5000' %} selected="selected" {% endif %} >5000 Satoshi</option>
+                    <option value="10000" {% if defaultParams.boxsize =='10000' %} selected="selected" {% endif %} >10000 Satoshi</option>
+                    <option value="20000" {% if defaultParams.boxsize =='20000' %} selected="selected" {% endif %} >20000 Satoshi</option>
+                    <option value="25000" {% if defaultParams.boxsize =='25000' %} selected="selected" {% endif %} >25000 Satoshi</option>
+                    <option value="50000" {% if defaultParams.boxsize =='50000' %} selected="selected" {% endif %} >50000 Satoshi</option>
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Reversal</small></h4>
+        
+                    <select name="Reversal" class="form-control">
+                        <option value="1" {% if defaultParams.reversal == 1 %} selected="selected" {% endif %} >1</option>
+                        <option value="2" {% if defaultParams.reversal == 2 %} selected="selected" {% endif %} >2</option>
+                        <option value="3" {% if defaultParams.reversal == 3 %} selected="selected" {% endif %} >3</option>
+                        <option value="4" {% if defaultParams.reversal == 4 %} selected="selected" {% endif %} >4</option>
+                        <option value="5" {% if defaultParams.reversal == 5 %} selected="selected" {% endif %} >5</option>
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Type</small></h4>
+        
+                    <select name="Type" class="form-control">
+                        <option value="Close" >Close</option>
+                        <option value="High/Low" {% if defaultParams.type =="High/Low" %} selected="selected" {% endif %}  >High/Low</option>
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Zoom</small></h4>
+
+                    <select name="Zoom" class="form-control">
+                        <option value="All" {% if defaultParams.zoom=="All" %} selected="selected" {% endif %} >All</option>
+                        <option value="3m" {% if defaultParams.zoom =="3m" %} selected="selected" {% endif %} >3 months</option>
+                        <option value="2m" {% if defaultParams.zoom =="2m" %} selected="selected" {% endif %} >2 months</option>
+                        <option value="1m" {% if defaultParams.zoom =="1m" %} selected="selected" {% endif %} >1 month</option>
+                        <option value="2w" {% if defaultParams.zoom =="2w" %} selected="selected" {% endif %} >2 weeks</option>
+                        <option value="1w" {% if defaultParams.zoom =="1w" %} selected="selected" {% endif %} >1 week</option>
+                        <option value="4d" {% if defaultParams.zoom =="4d" %} selected="selected" {% endif %} >4 days</option>
+                        <option value="2d" {% if defaultParams.zoom =="2d" %} selected="selected" {% endif %} >2 days</option>
+                        <option value="1d" {% if defaultParams.zoom =="1d" %} selected="selected" {% endif %} >1 day</option>
+                        <option value="8h" {% if defaultParams.zoom =="8h" %} selected="selected" {% endif %} >8 hours</option>
+                        <option value="6h" {% if defaultParams.zoom =="6h" %} selected="selected" {% endif %} >6 hours</option>
+                        <option value="2h" {% if defaultParams.zoom =="2h" %} selected="selected" {% endif %} >2 hours</option>
+                        <option value="1h" {% if defaultParams.zoom =="1h" %} selected="selected" {% endif %} >1 hour</option>
+                    </select>
+                </td>
+
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <button type="submit" value="submit" class="btn btn-primary btn-lg active">Get Chart!</button>
+                </td>
+                </tr>
+            
+                <tr></tr>
+    
+                <tr style="padding:25px">
+    
+                    <td class="col-xl-10" id="Drawing"  style="padding-top:20px;text-align:center;padding-bottom:10">
+                        <h4><small>Drawing Tools</small></h4>
+                    </td>
+        
+                    <td class="col-xl-10" style="padding-top:20px;text-align:center;padding-bottom:10;padding-top:0;">
+                     <!--
+                      <h4>
+                        <small>
+                          Bullish support line
+                        </small>
+                      </h4>
+                      -->
+                        <button type="button" id="BuSL" class="btn btn-default btn-sm active">&nbsp;</button>
+                        <button type="button" id="BeSL" class="btn btn-default btn-sm active">&nbsp;</button>
+                    </td>
+        
+                    <td class="col-xl-10" style="padding-top:20px;text-align:center;padding-bottom:10;padding-top:0;">
+                    <!--
+                      <h4>
+                        <small>
+                          Bearish resistance line
+                        </small>
+                      </h4>
+                    -->
+                       <button type="button" id="BuTL" class="btn btn-default btn-sm active">&nbsp;</button>
+                       <button type="button" id="BeTL" class="btn btn-default btn-sm active">&nbsp;</button>
+                    </td>
+                    
+                    <td class="col-xl-10" style="padding-top:20px;text-align:center;padding-bottom:10;padding-top:0;">
+                    <!--
+                      <h4>
+                        <small>
+                          Bullish trend line
+                        </small>
+                      </h4>
+                    -->
+                    <button type="button" id="DeleteLine" class="btn btn-default btn-sm active" style="display: inline-block;float:left;margin-left:7;">&nbsp;</button>
+                    </td>
+                    
+                    <td class="col-xl-10" style="padding-top:20px;text-align:center;padding-bottom:10;padding-top:0;">
+                    <!--
+                      <h4>
+                        <small>
+                          Bearish trend line
+                        </small>
+                      </h4>
+                    -->
+
+                    </td>
+        
+                    <td class="col-xs-10">
+                    </td>
+                    <td class="col-xs-10">
+                    </td>
+                    <td class="col-xs-10">
+                    </td>
+    
+    
+                </tr>
+                <tr class="bg-primary">
+                    <td colspan="8" height="20" valign="bottom" style="margin-bottom:0;bottom:0">
+    
+                    {{ chart_text }}
+    
+                    </td>
+    
+                    <td height="20" valign="bottom" style="margin-bottom:0;bottom:0;text-align:right">
+                        <a href="#popup1" style="color:white"><!--<img src="info2.png">-->&nbsp;&nbsp;&nbsp;&nbsp;<b>i</b>&nbsp;</a>
+                        <!--<span class="label label-info">Info</span>-->
+    
+
+    
+    
+    
+                    </td>
+                </tr>
+
+                </table>
+
+            </form>
+        </div>
+
+
+    </div>
+
+
+      <div class='main_container'>
+
+          <div id="left_column">
+
+              {{ scale_svg|safe }}
+
+          </div>
+
+          <div id="center_column">
+
+              {{ chart_svg|safe }}
+
+          </div>
+
+          <div id="right_column">
+
+              {{ scale_svg|safe }}
+
+          </div>   
+
+      <div id="popup1" class="overlay">
+          <div class="popup">
+
+              <a class="close" href="#">&times;</a>
+                <div class="content" style="text-align:left">
+                    <img src="{{ url_for('static',filename='about.png') }}">
+                </div>
+          </div>
+      </div>
+
+      </div>
+</body>
+</html>

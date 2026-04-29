@@ -1,0 +1,257 @@
+#logo {
+  opacity:2;
+  display:inline-block;
+  text-align: left;
+  float:left;
+}
+
+table {
+  display: inline;
+  position: relative;
+  float:left;
+  vertical-align: text-bottom;
+  text-align: left;
+  max-width:100%;
+  max-height:100%;
+  margin-left: 1%;
+  margin-right: auto;
+  margin-top: 4px;
+}
+
+td {
+  padding-left: 10px;
+}
+
+button {
+  position: relative;
+  bottom:   0;
+  //margin-left: 20px;
+}
+
+svg {
+  background-color: black;
+}
+
+#top {
+  text-align:center;
+  vertical-align: bottom;
+  background-color:white;
+  float: top;
+  top: 40;
+  height: 20%;
+  display: inline-table;
+
+}
+
+.chart{
+  position: relative;
+  top: 0;
+    height: calc(100% - (195px));
+  white-space: nowrap;
+
+}
+
+#left_column {
+  float: left;
+  overflow: hidden;
+  margin-left: 10px;
+/*  width: 15%; */
+}
+
+#center_column {
+  overflow: auto;
+  float: left;
+  /*width: 82%;*/
+  /*border: 1px solid #333;*/
+}
+
+#right_column {
+  float: left;
+  overflow: hidden;
+/*  width: 15%; */
+}
+
+
+line {
+  font-size:220px;
+}
+
+line:hover {
+  stroke: #51F196;
+  stroke-width: 5;
+}
+
+.display {
+  display: block;
+  height: 16px;
+  position: absolute;
+  text-align: center;
+  /*float: left;*/
+  vertical-align: middle;
+  width: 100%;
+  top: 50%; margin-top: -8px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #666666; /*this is the bar color*/
+  border: 0px none #3361A1;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3361A1; /*when mouse up*/
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #3361A1; /*when mouse down*/
+}
+
+::-webkit-scrollbar-track {
+  background: #000000; /*rest when inactive*/
+  border: 0px none #3361A1;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-track:hover {
+  background: #000000; /*rest when hover*/
+}
+
+::-webkit-scrollbar-track:active {
+  background: #000000; /*rest when mouse down*/
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+    
+.col-xs-10{
+  text-align:center;
+  width:inherit;
+}
+
+.bg-primary{
+  font-height:12px;
+}
+
+#BuSL {
+
+  padding: 10px 10px 10px 36px;
+  /*font-family: "Trebuchet MS", Arial, Verdana;*/
+  background:  url('static/busl.png') 10px 10px no-repeat;
+  border-radius: 16px;
+  border: 1px solid #d9d9d9;
+  text-shadow: 1px 1px #fff;
+  text-align: center;
+
+}
+
+
+#BeSL {
+
+  padding: 10px 10px 10px 36px;
+  /*font-family: "Trebuchet MS", Arial, Verdana;*/
+  background:  url('static/besl.PNG') 10px 10px no-repeat;
+  border-radius: 16px;
+  border: 1px solid #d9d9d9;
+  text-shadow: 1px 1px #fff;
+  text-align: center;
+
+}
+
+#BuTL {
+
+  padding: 10px 10px 10px 36px;
+  /*font-family: "Trebuchet MS", Arial, Verdana;*/
+  background:  url('static/butl.png') 10px 10px no-repeat;
+  border-radius: 16px;
+  border: 1px solid #d9d9d9;
+  text-shadow: 1px 1px #fff;
+  text-align: center;
+
+}
+
+
+#BeTL {
+
+  padding: 10px 10px 10px 36px;
+  /*font-family: "Trebuchet MS", Arial, Verdana;*/
+  background:  url('static/betl.png') 10px 10px no-repeat;
+  border-radius: 16px;
+  border: 1px solid #d9d9d9;
+  text-shadow: 1px 1px #fff;
+  text-align: center;
+
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 15px;
+  background: #fff;
+  border-radius: 5px;
+  /*width: 30%;*/
+  width:320px;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+.popup .close:hover {
+  color: #06D85F;
+}
+
+.popup .content {
+  max-height: 60%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}

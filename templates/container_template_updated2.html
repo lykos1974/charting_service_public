@@ -1,0 +1,800 @@
+<style media="screen" type="text/css">
+#logo {
+  opacity:2;
+  display:inline-block;
+  text-align: left;
+  float:left;
+}
+
+table {
+  display: inline;
+  position: relative;
+  float:left;
+  vertical-align: text-bottom;
+  text-align: left;
+  max-width:100%;
+  max-height:100%;
+  margin-left: 1%;
+  margin-right: auto;
+  margin-top: 4px;
+}
+
+td {
+  padding-left: 10px;
+}
+
+button {
+  position: relative;
+  bottom:   0;
+  //margin-left: 20px;
+}
+
+svg {
+  background-color: black;
+}
+
+#top {
+  text-align:center;
+  vertical-align: bottom;
+  background-color:white;
+  float: top;
+  top: 40;
+  height: 20%;
+  display: inline-table;
+
+}
+
+
+.main_container{
+    height: 80%;
+    width: 100%;
+}
+
+#left_column {
+    overflow: hidden;
+    float: left;
+    width: 111px;
+    height: 100%;
+}
+
+#center_column {
+    overflow: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    float: left;
+    height: 100%;
+    max-width: calc(100% - 222px);
+}
+
+#right_column {
+    overflow: hidden;
+    float: left;
+    width: 111px;
+    height: 100%;
+}
+
+
+line{
+    font-size:220px;
+    }
+line:hover {
+    stroke: #51F196;
+    stroke-width: 5;
+    }
+
+.display {
+    display: block;
+    height: 16px;
+    position: absolute;
+    text-align: center;
+    /*float: left;*/
+    vertical-align: middle;
+    width: 100%;
+    top: 50%; margin-top: -8px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #666666; /*this is the bar color*/
+  border: 0px none #3361A1;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3361A1; /*when mouse up*/
+}
+::-webkit-scrollbar-thumb:active {
+  background: #3361A1; /*when mouse down*/
+}
+::-webkit-scrollbar-track {
+  background: #000000; /*rest when inactive*/
+  border: 0px none #3361A1;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #000000; /*rest when hover*/
+}
+::-webkit-scrollbar-track:active {
+  background: #000000; /*rest when mouse down*/
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.col-xs-10{
+  text-align:center;
+  width:inherit;
+}
+
+.bg-primary{
+  font-height:12px;
+}
+
+#BuSL {
+
+    padding: 10px 10px 10px 36px;
+    /*font-family: "Trebuchet MS", Arial, Verdana;*/
+    background:  url('static/busl.png') 10px 10px no-repeat;
+    border-radius: 16px;
+    border: 1px solid #d9d9d9;
+    text-shadow: 1px 1px #fff;
+    text-align: center;
+
+    }
+
+
+#BeSL {
+
+    padding: 10px 10px 10px 36px;
+    /*font-family: "Trebuchet MS", Arial, Verdana;*/
+    background:  url('static/besl.png') 10px 10px no-repeat;
+    border-radius: 16px;
+    border: 1px solid #d9d9d9;
+    text-shadow: 1px 1px #fff;
+    text-align: center;
+
+    }
+
+#BuTL {
+
+    padding: 10px 10px 10px 36px;
+    /*font-family: "Trebuchet MS", Arial, Verdana;*/
+    background:  url('static/butl.png') 10px 10px no-repeat;
+    border-radius: 16px;
+    border: 1px solid #d9d9d9;
+    text-shadow: 1px 1px #fff;
+    text-align: center;
+
+    }
+
+
+#BeTL {
+
+    padding: 10px 10px 10px 36px;
+    /*font-family: "Trebuchet MS", Arial, Verdana;*/
+    background:  url('static/betl.png') 10px 10px no-repeat;
+    border-radius: 16px;
+    border: 1px solid #d9d9d9;
+    text-shadow: 1px 1px #fff;
+    text-align: center;
+
+    }
+
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 15px;
+  background: #fff;
+  border-radius: 5px;
+  /*width: 30%;*/
+  width:320px;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 60%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+
+</style>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+        <script>
+            $( window ).load(function() {
+                $('#center_column').on('scroll', function() {
+                    $('#left_column').scrollTop($(this).scrollTop());
+                    $('#right_column').scrollTop($(this).scrollTop());
+                    });
+
+
+                $("#BuSL").click(function() {
+                    $(this).data('clicked', true);
+                    //alert("reer");
+                    });
+
+                $("#BeSL").click(function(){
+                    $(this).data('clicked', true);
+
+                    });
+
+                $("#BuTL").click(function(){
+                    $(this).data('clicked', true);
+
+                    });
+
+                $("#BeTL").click(function(){
+                    $(this).data('clicked', true);
+
+                    });
+
+
+                // Code to hide elements
+                document.getElementById( 'Drawing' ).style.display = 'none';
+                document.getElementById( 'BuSL' ).style.display = 'none';
+                document.getElementById( 'BeSL' ).style.display = 'none';
+                document.getElementById( 'BuTL' ).style.display = 'none';
+                document.getElementById( 'BeTL' ).style.display = 'none';
+                });
+        </script>
+        <script>
+        function check(){
+            width = $('#clickable').width();
+            var parentWidth = $('#clickable').offsetParent().width();
+            //alert("svg width:",$('#clickable').width());
+           // alert("parent div width:",parentWidth);
+            if (parentWidth > width){
+               // alert("inside func");
+                //$('#center_column').removeAttr('width')
+
+                $('#center_column').css({ width: ""});
+                //alert(width);alert(parentWidth);
+
+                }else {
+                    $('#center_column').css({ width: "82%"});
+            }
+
+              // if selected Time Period is Daily
+              if ($('select[name="Time_Period"]').val() == "Daily"){
+
+            //    if ($('select[name="Zoom"]').val() == "All")
+
+                  // Set Default Zoom
+                  $('select[name="Zoom"]').val("1m");
+
+                  $('select[name="Zoom"] option[value="All"]').prop('hidden',false);
+                  $('select[name="Zoom"] option[value="1m"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="2w"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="1w"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="4d"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2d"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1d"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="8h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="6h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1h"]').prop('hidden', true);
+              }
+
+              // if selected Time Period is 4 hours
+              if ($('select[name="Time_Period"]').val() == "4-hr"){
+                  // Set Default Zoom
+                  $('select[name="Zoom"] option[value="4d"]').attr("selected",true);
+
+                  $('select[name="Zoom"] option[value="All"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1m"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2w"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="1w"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="4d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="2d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="1d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="8h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="6h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1h"]').prop('hidden', true);
+              }
+
+
+              // if selected Time Period is 2 hours
+              if ($('select[name="Time_Period"]').val() == "2-hr"){
+                  // Set Default Zoom
+                  $('select[name="Zoom"] option[value="1w"]').attr("selected",true);
+
+                  $('select[name="Zoom"] option[value="All"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1m"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2w"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1w"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="4d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="2d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="1d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="8h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="6h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1h"]').prop('hidden', true);
+              }
+
+              // if selected Time Period is 30 minutes
+              if ($('select[name="Time_Period"]').val() == "30-min"){
+                  // Set Default Zoom
+                  $('select[name="Zoom"] option[value="4d"]').attr("selected",true);
+
+                  $('select[name="Zoom"] option[value="All"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1m"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2w"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1w"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="4d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="2d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="1d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="8h"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="6h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1h"]').prop('hidden', true);
+              }
+
+
+              // if selected Time Period is 15 minutes
+              if ($('select[name="Time_Period"]').val() == "15-min"){
+                  // Set Default Zoom
+                  $('select[name="Zoom"] option[value="2d"]').attr("selected",true);
+
+                  $('select[name="Zoom"] option[value="All"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1m"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2w"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1w"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="4d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="2d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="1d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="8h"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="6h"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="2h"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1h"]').prop('hidden', true);
+              }
+
+              /*
+              // if selected Time Period is 5 minutes
+              if ($('select[name="Time_Period"]').val() == "5-min"){
+                  // Set Default Zoom
+                  $('select[name="Zoom"] option[value="1d"]').attr("selected",true);
+
+                  $('select[name="Zoom"] option[value="All"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1m"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2w"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="1w"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="4d"]').prop('hidden', true);
+                  $('select[name="Zoom"] option[value="2d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="1d"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="8h"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="6h"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="2h"]').prop('hidden', false);
+                  $('select[name="Zoom"] option[value="1h"]').prop('hidden', false);
+              }
+              */
+            }
+
+            function loadSVG() {
+                // Code to show elements
+                document.getElementById( 'Drawing' ).style.display = 'inline-block';
+                document.getElementById( 'BuSL' ).style.display = 'inline-block';
+                document.getElementById( 'BeSL' ).style.display = 'inline-block';
+                document.getElementById( 'BuTL' ).style.display = 'inline-block';
+                document.getElementById( 'BeTL' ).style.display = 'inline-block';
+
+
+                $('#clickable').click(function(e) {
+
+                    if($('#BuSL').data('clicked')) {
+                        // Bullish support line creation
+                        var offset_t = $(this).offset().top - $(window).scrollTop();
+                        var offset_l = $(this).offset().left - $(window).scrollLeft();
+
+                        var left = Math.round( (e.clientX - offset_l) );
+                        var top = Math.round( (e.clientY - offset_t) );
+
+                        //alert("Left: " + left + " Top: " + top);
+                        var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+                        newLine.setAttribute('id','line2');
+                        newLine.setAttribute('x1','0');
+                        newLine.setAttribute('y1',top);
+                        newLine.setAttribute('x2',$(this).width());
+                        newLine.setAttribute('y2',top);
+                        newLine.setAttribute('fill','black');
+                        newLine.setAttribute('stroke','lightgreen');
+                        newLine.setAttribute('stroke-width','3');
+                        $("#clickable").append(newLine);
+                        $('#BuSL').data('clicked', false);
+                        }
+
+
+                    if($('#BeSL').data('clicked')) {
+                        // Bearish resistance line creation
+                        var offset_t = $(this).offset().top - $(window).scrollTop();
+                        var offset_l = $(this).offset().left - $(window).scrollLeft();
+
+                        var left = Math.round( (e.clientX - offset_l) );
+                        var top = Math.round( (e.clientY - offset_t) );
+
+                        //alert("Left: " + left + " Top: " + top);
+                        var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+                        newLine.setAttribute('id','line2');
+                        newLine.setAttribute('x1','0');
+                        newLine.setAttribute('y1',top);
+                        newLine.setAttribute('x2',$(this).width());
+                        newLine.setAttribute('y2',top);
+                        newLine.setAttribute('fill','black');
+                        newLine.setAttribute('stroke','red');
+                        newLine.setAttribute('stroke-width','3');
+                        $("#clickable").append(newLine);
+                        $('#BeSL').data('clicked', false);
+                        }
+
+
+                    if($('#BeTL').data('clicked')) {
+                        // Bearish resistance trend line creation
+                        var offset_t = $(this).offset().top - $(window).scrollTop();
+                        var offset_l = $(this).offset().left - $(window).scrollLeft();
+
+                        var left = Math.round( (e.clientX - offset_l) );
+                        var top = Math.round( (e.clientY - offset_t) );
+                        var tan = Math.round(top / Math.tan(45))
+
+                        //alert("Left: " + left + " Top: " + top + " Tan: " + tan);
+                        var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+                        newLine.setAttribute('id','line2');
+                        newLine.setAttribute('x1',left);
+                        newLine.setAttribute('y1',top);
+                        newLine.setAttribute('x2',left+$(this).height());
+                        newLine.setAttribute('y2',top+$(this).height());
+                        newLine.setAttribute('fill','black');
+                        newLine.setAttribute('stroke','red');
+                        newLine.setAttribute('stroke-width','3');
+                        $("#clickable").append(newLine);
+                        $('#BeTL').data('clicked', false);
+                        }
+
+
+                    if($('#BuTL').data('clicked')) {
+                        // Bullish support trend line creation
+                        var offset_t = $(this).offset().top - $(window).scrollTop();
+                        var offset_l = $(this).offset().left - $(window).scrollLeft();
+
+                        var left = Math.round( (e.clientX - offset_l) );
+                        var top = Math.round( (e.clientY - offset_t) );
+                        var tan = Math.round(top / Math.tan(45))
+
+                        //alert("Left: " + left + " Top: " + top + " Tan: " + tan);
+                        var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+                        newLine.setAttribute('id','line2');
+                        newLine.setAttribute('x1',left);
+                        newLine.setAttribute('y1',top);
+                        newLine.setAttribute('x2',left+$(this).height());
+                        newLine.setAttribute('y2',top-$(this).height());
+                        newLine.setAttribute('fill','black');
+                        newLine.setAttribute('stroke','lightgreen');
+                        newLine.setAttribute('stroke-width','3');
+                        $("#clickable").append(newLine);
+                        $('#BuTL').data('clicked', false);
+                        }
+                });
+
+            }
+        </script>
+<!--
+        <script>
+
+            var svg = document.querySelector('svg')
+
+            function loaded() {
+              alert('loaded');
+              // do something to adjust height
+            }
+
+            if (svg.complete) {
+              loaded()
+            } else {
+              svg.addEventListener('load', loaded)
+              svg.addEventListener('error', function() {
+                  alert('error')
+              })
+            }
+
+
+        </script>
+-->
+
+    </head>
+<body onload="check()">
+
+    <div id="top">
+
+        <div id="top1">
+
+            <form action="{{ url_for('draw_chart') }}" method="POST" class="form-inline">
+
+                <table>
+
+                <tr>
+                <td class="col-xs-10" style="width:inherit;" rowspan="3">
+                    <a href="{{ url_for('home') }}">
+                        <img id="logo" style="margin-right:20px" width="144" height="73" title="" alt="" src="{{ url_for('static',filename='cryptxo_logo.jpg') }}"  />
+                    </a>
+                </td>
+                <td>
+                    <h4><small>Exchange</small></h4>
+
+                    <select name="Exchange" class="form-control">
+                    <option value="Poloniex">Poloniex</option>
+                </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Currency Pair</small></h4>
+
+
+
+                    <select name="Currency_Pair" id="test" class="form-control">
+
+                    {% for pair in active_currencies %}
+
+                    <option value="{{pair}}">{{pair}}</option>
+
+                    {% endfor %}
+
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Time Period</small></h4>
+
+                    <select name="Time_Period" class="form-control" onchange="check()">
+                    <option value="Daily">Daily</option>
+                    <option value="4-hr">4 hours</option>
+                    <option value="2-hr">2 hours</option>
+                    <option value="30-min">30 minutes</option>
+                    <option value="15-min">15 minutes</option>
+                    <!--<option value="5-min">5 minutes</option>-->
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Boxsize</small></h4>
+
+                    <select name="Boxsize" class="form-control">
+                    <option value="1p">1% (Log Scale)</option>
+                    <option value="2p">2% (Log Scale)</option>
+                    <option value="3p">3% (Log Scale)</option>
+                    <option value="1">1 Satoshi</option>
+                    <option value="2">2 Satoshi</option>
+                    <option value="5">5 Satoshi</option>
+                    <option value="10">10 Satoshi</option>
+                    <option value="20">20 Satoshi</option>
+                    <option value="25">25 Satoshi</option>
+                    <option value="100">100 Satoshi</option>
+                    <option value="150">150 Satoshi</option>
+                    <option value="200">200 Satoshi</option>
+                    <option value="250">250 Satoshi</option>
+                    <option value="500">500 Satoshi</option>
+                    <option value="1000">1000 Satoshi</option>
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Reversal</small></h4>
+
+                    <select name="Reversal" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Type</small></h4>
+
+                    <select name="Type" class="form-control">
+                    <option value="Close">Close</option>
+                    <option value="High/Low">High/Low</option>
+                    </select>
+                </td>
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <h4><small>Zoom</small></h4>
+
+                    <select name="Zoom" class="form-control">
+                    <option value="All">All</option>
+                    <option value="1m">1 month</option>
+                    <option value="2w">2 weeks</option>
+                    <option value="1w">1 week</option>
+                    <option value="4d">4 days</option>
+                    <option value="2d">2 days</option>
+                    <option value="1d">1 day</option>
+                    <option value="8h">8 hours</option>
+                    <option value="6h">6 hours</option>
+                    <option value="2h">2 hours</option>
+                    <option value="1h">1 hour</option>
+                    </select>
+                </td>
+
+
+                <td class="col-xs-10" style="width:inherit;">
+                    <button type="submit" value="submit" class="btn btn-primary btn-lg active">Get Chart!</button>
+                </td>
+                </tr>
+
+                <tr></tr>
+
+                <tr style="padding:25px">
+
+                    <td class="col-xl-10" id="Drawing"  style="padding-top:20px;text-align:center;padding-bottom:10">
+                        <h4><small>Drawing Tools</small></h4>
+                    </td>
+
+                    <td class="col-xl-10" style="padding-top:20px;text-align:center;padding-bottom:10;padding-top:0;">
+                     <!--
+                      <h4>
+                        <small>
+                          Bullish support line
+                        </small>
+                      </h4>
+                      -->
+                        <button type="button" id="BuSL" class="btn btn-default btn-sm active">&nbsp;</button>
+                        <button type="button" id="BeSL" class="btn btn-default btn-sm active">&nbsp;</button>
+                    </td>
+
+                    <td class="col-xl-10" style="padding-top:20px;text-align:center;padding-bottom:10;padding-top:0;">
+                    <!--
+                      <h4>
+                        <small>
+                          Bearish resistance line
+                        </small>
+                      </h4>
+                    -->
+                       <button type="button" id="BuTL" class="btn btn-default btn-sm active">&nbsp;</button>
+                       <button type="button" id="BeTL" class="btn btn-default btn-sm active">&nbsp;</button>
+                    </td>
+
+                    <td class="col-xl-10" style="padding-top:20px;text-align:center;padding-bottom:10;padding-top:0;">
+                    <!--
+                      <h4>
+                        <small>
+                          Bullish trend line
+                        </small>
+                      </h4>
+                    -->
+                    </td>
+
+                    <td class="col-xl-10" style="padding-top:20px;text-align:center;padding-bottom:10;padding-top:0;">
+                    <!--
+                      <h4>
+                        <small>
+                          Bearish trend line
+                        </small>
+                      </h4>
+                    -->
+
+                    </td>
+
+                    <td class="col-xs-10">
+                    </td>
+                    <td class="col-xs-10">
+                    </td>
+                    <td class="col-xs-10">
+                    </td>
+
+
+                </tr>
+                <tr class="bg-primary">
+                    <td colspan="8" height="20" valign="bottom" style="margin-bottom:0;bottom:0">
+
+                    {{ chart_text }}
+
+                    </td>
+
+                    <td height="20" valign="bottom" style="margin-bottom:0;bottom:0;text-align:right">
+                        <a href="#popup1" style="color:white"><!--<img src="info2.png">-->&nbsp;&nbsp;&nbsp;&nbsp;<b>i</b>&nbsp;</a>
+                        <!--<span class="label label-info">Info</span>-->
+
+
+
+
+
+                    </td>
+                </tr>
+
+                </table>
+
+            </form>
+        </div>
+
+
+    </div>
+
+
+      <div class='main_container'>
+
+          <div id="left_column">
+
+              {{ scale_svg|safe }}
+
+          </div>
+
+          <div id="center_column">
+
+              {{ chart_svg|safe }}
+
+          </div>
+
+          <div id="right_column">
+
+              {{ scale_svg|safe }}
+
+          </div>
+
+      <div id="popup1" class="overlay">
+          <div class="popup">
+
+              <a class="close" href="#">&times;</a>
+                <div class="content" style="text-align:left">
+                    <img src="{{ url_for('static',filename='about.png') }}">
+                </div>
+          </div>
+      </div>
+
+      </div>
+
+
+</body>
+</html>
