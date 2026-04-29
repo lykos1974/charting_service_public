@@ -14,6 +14,17 @@ import ccxt
 
 app = Flask(__name__)
 
+
+def resolve_exchange_id(selected_exchange):
+    """
+    Resolve exchange aliases so UI names remain stable across ccxt versions.
+    """
+    if selected_exchange == "mexc" and "mexc" not in ccxt.exchanges and "mexc3" in ccxt.exchanges:
+        return "mexc3"
+    if selected_exchange == "mexc3" and "mexc3" not in ccxt.exchanges and "mexc" in ccxt.exchanges:
+        return "mexc"
+    return selected_exchange
+
 # Scheduler cron-style
 cron = BackgroundScheduler(daemon=True)
 
@@ -202,8 +213,9 @@ def main_page():
     }
 
     # Render template with active currencies droplist in selectbox
+    default_exchange = 'mexc' if 'mexc' in ccxt.exchanges else ('mexc3' if 'mexc3' in ccxt.exchanges else 'kraken')
     return render_template('container_template_updated.html',exchanges = ccxt.exchanges,
-                           default = 'kraken',defaultParams = selectedParams )
+                           default = default_exchange,defaultParams = selectedParams )
 
 
 @app.route('/home')
@@ -214,6 +226,7 @@ def home():
 def getInfo(selectedExchange):
     if(selectedExchange == "undefined"):
         selectedExchange = "_1btcxe"
+    selectedExchange = resolve_exchange_id(selectedExchange)
 
     response = {"msg" : "error"}
     if selectedExchange in ccxt.exchanges:
@@ -245,7 +258,7 @@ def draw_chart():
     #  TODO loading Screen - check http://stackoverflow.com/questions/14525029/display-a-loading-message-while-a-time-consuming-function-is-executed-in-flask
 
     # Get input data from form
-    selectedExchange = request.form['Exchange'].lower()
+    selectedExchange = resolve_exchange_id(request.form['Exchange'].lower())
     if selectedExchange not in ccxt.exchanges:
         return redirect(url_for('main_page'))
 
