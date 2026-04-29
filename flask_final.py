@@ -5,6 +5,7 @@ from flask import request, redirect, url_for
 import logging as Logger
 import restructured as pnfengine, API_poloniex as polo, fileFunctions as f
 import datetime
+import os
 import pandas as pd
 import gc
 import atexit
@@ -13,6 +14,69 @@ import time
 import ccxt
 
 app = Flask(__name__)
+LIVE_MARKET_CACHE = {
+    "exchange": "mexc",
+    "updated_at": None,
+    "symbols": {}
+}
+
+
+def resolve_exchange_id(selected_exchange):
+    """
+    Resolve exchange aliases so UI names remain stable across ccxt versions.
+    """
+    if selected_exchange == "mexc" and "mexc" not in ccxt.exchanges and "mexc3" in ccxt.exchanges:
+        return "mexc3"
+    if selected_exchange == "mexc3" and "mexc3" not in ccxt.exchanges and "mexc" in ccxt.exchanges:
+        return "mexc"
+    return selected_exchange
+
+
+def create_exchange_instance(selected_exchange):
+    """
+    Build ccxt exchange instance with safe defaults for market data pulls.
+    """
+    exchange_id = resolve_exchange_id(selected_exchange)
+    if exchange_id not in ccxt.exchanges:
+        return None
+
+    exchange_class = getattr(ccxt, '%s' % exchange_id)
+    return exchange_class({
+        'enableRateLimit': True,
+        'timeout': 20000,
+    })
+
+
+def get_live_symbols():
+    raw_symbols = os.getenv("LIVE_MEXC_SYMBOLS", "BTC/USDT,ETH/USDT")
+    return [s.strip() for s in raw_symbols.split(",") if s.strip()]
+
+
+def update_mexc_live_snapshot():
+    exchange = create_exchange_instance("mexc")
+    if exchange is None:
+        exchange = create_exchange_instance("mexc3")
+    if exchange is None:
+        return
+
+    symbols = get_live_symbols()
+    snapshot = {}
+    for symbol in symbols:
+        try:
+            ticker = exchange.fetch_ticker(symbol)
+            snapshot[symbol] = {
+                "last": ticker.get("last"),
+                "bid": ticker.get("bid"),
+                "ask": ticker.get("ask"),
+                "timestamp": ticker.get("timestamp")
+            }
+        except:
+            continue
+
+    if len(snapshot) > 0:
+        LIVE_MARKET_CACHE["exchange"] = exchange.id
+        LIVE_MARKET_CACHE["updated_at"] = int(time.time())
+        LIVE_MARKET_CACHE["symbols"] = snapshot
 
 # Scheduler cron-style
 cron = BackgroundScheduler(daemon=True)
@@ -180,6 +244,7 @@ today_utc_start = utc_datetime.strftime("%Y-%m-%d")+" 00:00:00"
 
 # Add functions to scheduler
 cron.add_job(update_active_currencies, 'interval', days=1, start_date=today_utc_start)#
+cron.add_job(update_mexc_live_snapshot, 'interval', seconds=10)
 #cron.add_job(job_fetch_polo_data_1d, 'interval', days=1, start_date=today_utc_start)
 #cron.add_job(job_fetch_polo_data_4h, 'interval', hours=4, start_date=today_utc_start)
 #cron.add_job(job_fetch_polo_data_2h, 'interval', hours=2, start_date=today_utc_start)
@@ -202,35 +267,44 @@ def main_page():
     }
 
     # Render template with active currencies droplist in selectbox
+    default_exchange = 'mexc' if 'mexc' in ccxt.exchanges else ('mexc3' if 'mexc3' in ccxt.exchanges else 'kraken')
     return render_template('container_template_updated.html',exchanges = ccxt.exchanges,
-                           default = 'kraken',defaultParams = selectedParams )
+                           default = default_exchange,defaultParams = selectedParams )
 
 
 @app.route('/home')
 def home():
     return redirect(url_for('main_page'))
 
+
+@app.route("/live/mexc", methods=['GET'])
+def get_mexc_live_snapshot():
+    return jsonify(LIVE_MARKET_CACHE)
+
 @app.route("/getInfo/<selectedExchange>", methods=['GET'])
 def getInfo(selectedExchange):
     if(selectedExchange == "undefined"):
         selectedExchange = "_1btcxe"
+    selectedExchange = resolve_exchange_id(selectedExchange)
 
     response = {"msg" : "error"}
-    if selectedExchange in ccxt.exchanges:
-        exchange = getattr(ccxt, '%s' % selectedExchange)()
+    exchange = create_exchange_instance(selectedExchange)
+    if exchange is not None:
+        try:
+            times = exchange.timeframes
+            markets = exchange.fetch_markets()
 
-        times = exchange.timeframes
-        markets = exchange.fetch_markets()
+            pairs = []
+            for market in markets:
+                pairs.append(market['symbol'])
+            pairs.sort()
 
-        pairs = []
-        for market in markets:
-            pairs.append(market['symbol'])
-        pairs.sort()
-
-        response = {
-            "timeFrames": times,
-            "pairs":     pairs
-        }
+            response = {
+                "timeFrames": times,
+                "pairs":     pairs
+            }
+        except:
+            response = {"msg": "error"}
 
     return jsonify(response)
 
@@ -245,7 +319,7 @@ def draw_chart():
     #  TODO loading Screen - check http://stackoverflow.com/questions/14525029/display-a-loading-message-while-a-time-consuming-function-is-executed-in-flask
 
     # Get input data from form
-    selectedExchange = request.form['Exchange'].lower()
+    selectedExchange = resolve_exchange_id(request.form['Exchange'].lower())
     if selectedExchange not in ccxt.exchanges:
         return redirect(url_for('main_page'))
 
@@ -300,8 +374,14 @@ def draw_chart():
 
     json_filename_to_fetch = tmp_folder+"\\"+selectedExchange+currency_pair.replace("/","_")+time_period+"_"+str(since)+"_"+str(int(time.time()))+".json"
 
-    exchange = getattr(ccxt, '%s' % selectedExchange)()
-    response = exchange.fetch_ohlcv(currency_pair,time_period,since)
+    exchange = create_exchange_instance(selectedExchange)
+    if exchange is None:
+        return redirect(url_for('main_page'))
+
+    try:
+        response = exchange.fetch_ohlcv(currency_pair,time_period,since)
+    except:
+        return redirect(url_for('main_page'))
 
     # response = response[-20::]
     results = []

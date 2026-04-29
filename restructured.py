@@ -26,6 +26,10 @@ def replaceSatoshi(x):
     return float("{:.8f}".format(x / 100000000))
 
 
+def meets_or_exceeds_boxsize(delta, boxsize):
+    return float(delta) >= float(boxsize)
+
+
 #     _____     _____    _____     _        _____         _                   _____ _
 #    |  _  |___|   __|  |     |___|_|___   |   __|___ ___|_|___ ___    ___   |     | |___ ___ ___
 #    |   __|   |   __|  | | | | .'| |   |  |   __|   | . | |   | -_|  |___|  |   --| | . |_ -| -_|
@@ -139,7 +143,7 @@ def main_pnf_engine_using_close_data(MyPandasFrame, boxsize=0.029558802, reversa
             Boxvalue = removeSatoshi(Boxvalue)
             Boxsize = removeSatoshi(Boxsize)
 
-        if (abs(Close_to_check - Boxvalue)) >= Boxsize:
+        if meets_or_exceeds_boxsize(abs(Close_to_check - Boxvalue), Boxsize):
             if Close_to_check > Boxvalue: # Keeping close
                 XO = "X"
 
@@ -275,8 +279,8 @@ def main_pnf_engine_using_close_data(MyPandasFrame, boxsize=0.029558802, reversa
         # Check initial XO status to see whether we are in an upwards or downwards trend
         if pnf_data[CurrentRowPnfArray,2] == "X":  # we are in an upwards movement
             #if (abs(pnf_data[CurrentRowPnfArray,6]*100000000 - Close_to_check)) >= Boxsize: # We check the Boxvalue with the Close_to_check
-            if (abs(Boxvalue - Close_to_check)) >= Boxsize:  # We check the Boxvalue with the Close_to_check
-                if Close_to_check >= NextX:  # first case where a new X can be drawn
+            if meets_or_exceeds_boxsize(abs(Boxvalue - Close_to_check), Boxsize):  # We check the Boxvalue with the Close_to_check
+                if meets_or_exceeds_boxsize(Close_to_check - NextX, 0):  # first case where a new X can be drawn
                     # Start filling PnF data
                     XO = "X"
 
@@ -337,7 +341,7 @@ def main_pnf_engine_using_close_data(MyPandasFrame, boxsize=0.029558802, reversa
                     #CurrentRowInputArray = row # keeping the row index to use afterwards in the main PnF loop
                     CurrentRowPnfArray = CurrentRowPnfArray+1     #  PnF index updated
 
-                elif Close_to_check <= NextO: # we have reversal
+                elif meets_or_exceeds_boxsize(NextO - Close_to_check, 0): # we have reversal
 
                     if BeforeFirstReversal == "True":  # used for Initial LastNextX&O
                         BeforeFirstReversal = "False"
@@ -446,9 +450,9 @@ def main_pnf_engine_using_close_data(MyPandasFrame, boxsize=0.029558802, reversa
 
         else:  # we are in a downwards movement
                 # compare current box - currentclose and see if it's bigger than boxsize
-                if abs(Boxvalue - Close_to_check) >= Boxsize: # this check is different from the ascending
+                if meets_or_exceeds_boxsize(abs(Boxvalue - Close_to_check), Boxsize): # this check is different from the ascending
                                                               # column due to filled/empty glasses
-                    if Close_to_check <= NextO:  # first case where a new O can be drawn
+                    if meets_or_exceeds_boxsize(NextO - Close_to_check, 0):  # first case where a new O can be drawn
 
                         # Start filling PnF data
                         XO = "O"
@@ -521,7 +525,7 @@ def main_pnf_engine_using_close_data(MyPandasFrame, boxsize=0.029558802, reversa
 
                         CurrentRowPnfArray = CurrentRowPnfArray+1     #  PnF index updated
 
-                    elif Close_to_check >= NextX: # we have reversal
+                    elif meets_or_exceeds_boxsize(Close_to_check - NextX, 0): # we have reversal
 
                         if BeforeFirstReversal == "True":  # used for Initial LastNextX&O
                             BeforeFirstReversal = "False"
@@ -636,6 +640,7 @@ def main_pnf_engine_using_close_data(MyPandasFrame, boxsize=0.029558802, reversa
         result[['Close', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']] = result[['Close', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']].astype(float)
         #result[['e^Close', 'e^Box', 'e^NextX', 'e^NextO', 'e^LastNextX', 'e^LastNextO']] = round_nearest(np.exp(result[['Close', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']]), 0.00000001)
         result[['e^Close', 'e^Box', 'e^NextX', 'e^NextO', 'e^LastNextX', 'e^LastNextO']] = np.exp(result[['Close', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']])
+        result[['e^Close', 'e^Box', 'e^NextX', 'e^NextO', 'e^LastNextX', 'e^LastNextO']] = result[['e^Close', 'e^Box', 'e^NextX', 'e^NextO', 'e^LastNextX', 'e^LastNextO']].round(8)
 
         # Concurrency - time efficiency for web app
         # Keep last 300 columns if 2000 < columns < 500
@@ -659,6 +664,7 @@ def main_pnf_engine_using_close_data(MyPandasFrame, boxsize=0.029558802, reversa
 
     elif Log==False:
         result[['Close', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']] = result[['Close', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']].astype(float)
+        result[['Close', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']] = result[['Close', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']].round(8)
         result['Boxsize'] = result['Boxsize'].apply(lambda x: format(x,'.8f'))
 
         # Concurrency - time efficiency for web app
@@ -803,7 +809,7 @@ def main_pnf_engine_using_high_low_data(MyPandasFrame, boxsize=0.029558802, reve
             High_to_check = array[row,1]
             Low_to_check = array[row,2]
 
-        if (High_to_check - Initial_High) >= Boxsize:  # the two Highs have a difference > Boxsize
+        if meets_or_exceeds_boxsize((High_to_check - Initial_High), Boxsize):  # the two Highs have a difference > Boxsize
 
             XO = "X" # Mark ascending trend
             Boxnumber = int((High_to_check-Initial_High)/Boxsize)+Boxnumber
@@ -841,7 +847,7 @@ def main_pnf_engine_using_high_low_data(MyPandasFrame, boxsize=0.029558802, reve
             break
 
 
-        elif (Initial_Low - Low_to_check) >= Boxsize:  # the two Lows have a difference > Boxsize
+        elif meets_or_exceeds_boxsize((Initial_Low - Low_to_check), Boxsize):  # the two Lows have a difference > Boxsize
 
             XO = "O" # Mark descending trend
             Initial_Value_Used_for_Box = Initial_Low
@@ -932,7 +938,7 @@ def main_pnf_engine_using_high_low_data(MyPandasFrame, boxsize=0.029558802, reve
             #if (abs(pnf_data[CurrentRowPnfArray,7] - array[row,3])) >= Boxsize:
 
             #  Check for higher High
-            if High_to_check >= NextX:  # first case where a new X can be drawn
+            if meets_or_exceeds_boxsize(High_to_check - NextX, 0):  # first case where a new X can be drawn
                 # Start filling PnF data
                 XO = "X"
                 # Find how many boxes we are above nextX (using High as metrix)
@@ -1047,7 +1053,7 @@ def main_pnf_engine_using_high_low_data(MyPandasFrame, boxsize=0.029558802, reve
         elif pnf_data[CurrentRowPnfArray,3] == "O":   # we are in a downwards movement - XO = "O"
             # We compare current Low with next Low to see if their difference bigger than boxsize
             # We have lower Low
-            if Low_to_check <= NextO:  # first case where a new O can be drawn
+            if meets_or_exceeds_boxsize(NextO - Low_to_check, 0):  # first case where a new O can be drawn
                 if Low_to_check == NextO:
                     checkO = "exact_box_floor_price"
                 # Start filling PnF data
@@ -1090,7 +1096,7 @@ def main_pnf_engine_using_high_low_data(MyPandasFrame, boxsize=0.029558802, reve
                 CurrentRowPnfArray = CurrentRowPnfArray+1     #  PnF index updated
 
             # Check for higher High to see whether we have a reversal
-            elif High_to_check >= NextX:
+            elif meets_or_exceeds_boxsize(High_to_check - NextX, 0):
 
                 if Reversal != 1:
                     if BeforeFirstReversal == "True":  # used for Initial LastNextX&O
@@ -1179,6 +1185,7 @@ def main_pnf_engine_using_high_low_data(MyPandasFrame, boxsize=0.029558802, reve
     if Log==True:
         result[['e^High','e^Low','e^Box','e^NextX','e^NextO','e^LastNextX','e^LastNextO']] =np.exp(result[['High','Low','Box','NextX',
                                                                                                            'NextO','LastNextX','LastNextO']])
+        result[['e^High','e^Low','e^Box','e^NextX','e^NextO','e^LastNextX','e^LastNextO']] = result[['e^High','e^Low','e^Box','e^NextX','e^NextO','e^LastNextX','e^LastNextO']].round(8)
 
         # Concurrency - time efficiency for web app
         # Keep last 300 columns if 2000 < columns < 500
@@ -1201,6 +1208,7 @@ def main_pnf_engine_using_high_low_data(MyPandasFrame, boxsize=0.029558802, reve
 
 
     elif Log==False:
+        result[['High', 'Low', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']] = result[['High', 'Low', 'Box', 'NextX', 'NextO', 'LastNextX', 'LastNextO']].round(8)
         result['Boxsize'] = result['Boxsize'].apply(lambda x: format(x,'.8f'))
 
         # Concurrency - time efficiency for web app
@@ -1269,7 +1277,7 @@ def pnf_signal_detection_engine(result, filename, boxsize=0.029558802, reversal=
 
                 #Initialize these two flags because we are in the opposite movement
                 run_once_flagY = 0
-                db_breakout_once == False
+                db_breakout_once = False
 
                 # find maximum box number of previous column and check for a breakout - many ways to do this
                 # we use the LastNext of the previous row - we also save the value referral till reversal
@@ -1299,7 +1307,7 @@ def pnf_signal_detection_engine(result, filename, boxsize=0.029558802, reversal=
 
                 #Initialize these two flags because we are in the opposite movement
                 run_once_flagX = 0
-                dt_breakout_once == False
+                dt_breakout_once = False
 
                 # find minimum box number of previous column and check for a breakout - many ways to do this
                 # we use the LastNextO of the previous row - we also save the value for referral till reversal
