@@ -78,6 +78,41 @@ def update_mexc_live_snapshot():
         LIVE_MARKET_CACHE["updated_at"] = int(time.time())
         LIVE_MARKET_CACHE["symbols"] = snapshot
 
+
+def fetch_ohlcv_history(exchange, symbol, timeframe, since, zoom):
+    """
+    Fetch OHLCV with pagination for "All" zoom to avoid single-call exchange limits (often 500 candles).
+    """
+    if zoom != "All":
+        return exchange.fetch_ohlcv(symbol, timeframe, since)
+
+    all_rows = []
+    limit = 1000
+    timeframe_seconds = exchange.parse_timeframe(timeframe)
+    timeframe_ms = timeframe_seconds * 1000
+    next_since = since
+    max_batches = 30
+
+    for _ in range(max_batches):
+        batch = exchange.fetch_ohlcv(symbol, timeframe, next_since, limit)
+        if not batch:
+            break
+
+        if len(all_rows) > 0 and batch[0][0] == all_rows[-1][0]:
+            batch = batch[1:]
+
+        if not batch:
+            break
+
+        all_rows.extend(batch)
+
+        if len(batch) < limit:
+            break
+
+        next_since = batch[-1][0] + timeframe_ms
+
+    return all_rows
+
 # Scheduler cron-style
 cron = BackgroundScheduler(daemon=True)
 
@@ -379,7 +414,7 @@ def draw_chart():
         return redirect(url_for('main_page'))
 
     try:
-        response = exchange.fetch_ohlcv(currency_pair,time_period,since)
+        response = fetch_ohlcv_history(exchange, currency_pair, time_period, since, zoom)
     except:
         return redirect(url_for('main_page'))
 
